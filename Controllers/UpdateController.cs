@@ -13,7 +13,7 @@ namespace Server.Controllers
     {
         private const string latestVersion = "001";
 
-        private const string versionHeaderKey = "HTTP_X_ESP8266_VERSION";
+        private const string versionHeaderKey = "x-ESP8266-version";
 
         public IActionResult Index()
         {
