@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
@@ -15,7 +16,7 @@ namespace Server.Controllers
 
         private const string versionHeaderKey = "x-ESP8266-version";
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var clientVersion = Request.Headers[versionHeaderKey];
             if(string.IsNullOrWhiteSpace(clientVersion))
@@ -40,21 +41,15 @@ namespace Server.Controllers
             //  create a block blob
             var blockBlob = container.GetBlobReference("build_001.bin");
 
-            var sasToken = blockBlob.GetSharedAccessSignature(
-                new SharedAccessBlobPolicy()
-                {
-                    Permissions = SharedAccessBlobPermissions.Read,
-                    SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(10),//assuming the blob can be downloaded in 10 minutes
-                },
-                new SharedAccessBlobHeaders()
-                {
-                    ContentDisposition = "attachment; filename=build.bin"
-                }
-            );
 
-            var blobUrl = string.Format("{0}{1}", blockBlob.Uri, sasToken);
-            return Redirect(blobUrl);
+            byte[] res;
+            using (var memoryStream = new MemoryStream())
+            {
+                await blockBlob.DownloadToStreamAsync(memoryStream);
+                res = memoryStream.ToArray();
+            }
 
+            return new FileStreamResult(new MemoryStream(res), "application/octet-stream");
         }
     }
 }
