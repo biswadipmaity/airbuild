@@ -49,6 +49,7 @@ namespace Server.Controllers
                 res = memoryStream.ToArray();
             }
 
+            HttpContext.Response.Headers.Add("Content-Length", res.Length.ToString());
             return new FileStreamResult(new MemoryStream(res), "application/octet-stream");
         }
     }
