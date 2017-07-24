@@ -1,0 +1,8 @@
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\bin\Debug\netcoreapp1.1\Server.deps.json
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\bin\Debug\netcoreapp1.1\Server.runtimeconfig.json
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\bin\Debug\netcoreapp1.1\Server.runtimeconfig.dev.json
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\bin\Debug\netcoreapp1.1\Server.dll
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\bin\Debug\netcoreapp1.1\Server.pdb
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\obj\Debug\netcoreapp1.1\Server.AssemblyInfo.cs
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\obj\Debug\netcoreapp1.1\Server.dll
+E:\Biswadip\OneDrive - Microsoft\Hack17\Server\obj\Debug\netcoreapp1.1\Server.pdb
