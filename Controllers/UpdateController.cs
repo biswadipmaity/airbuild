@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 
 namespace Server.Controllers
 {
+    public struct VersionSchema{
+        public string latestVersion;
+
+        public string path;
+    };
     public class UpdateController : Controller
     {
+
         private const string latestVersion = "001";
 
         private const string versionHeaderKey = "x-ESP8266-version";
@@ -24,33 +31,48 @@ namespace Server.Controllers
                 return StatusCode(404);
             }
 
-            if(latestVersion.Equals(clientVersion))
-            {
-                return StatusCode(304);
-            }
-
-
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airbuild;AccountKey=EkWjwGOb3AsrVcONZfkLhulHjCUM24wi9oVdoLYfo6QLZUyjPY93ql1Tz3q7ytw84axfi47H8hEg4MSyYd/Y1g==;EndpointSuffix=core.windows.net");
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airbuildppe;AccountKey=HXl2xZ1C05Q2gOSiL66JJKwj7VPWQ5DkeGRbk5a1HAPPredw5zsLzNr3hc/Gl7HSqB3PjYbdWDWmu1FOcRYFVQ==;EndpointSuffix=core.windows.net");
 
             //  create a blob client.
             var blobClient = storageAccount.CreateCloudBlobClient();
 
             //  create a container 
-            var container = blobClient.GetContainerReference("build");
+            var container = blobClient.GetContainerReference("hackathonproject");
 
             //  create a block blob
-            var blockBlob = container.GetBlobReference("build_001.bin");
+            var versionBlob = container.GetBlobReference("version.json");
 
-
-            byte[] res;
-            using (var memoryStream = new MemoryStream())
+            VersionSchema version;
+            using (var jsonStream = new MemoryStream())
             {
-                await blockBlob.DownloadToStreamAsync(memoryStream);
-                res = memoryStream.ToArray();
+                await versionBlob.DownloadToStreamAsync(jsonStream);
+                jsonStream.Seek(0, SeekOrigin.Begin);
+                version = CreateFromJsonStream<VersionSchema>(jsonStream);
             }
 
-            HttpContext.Response.Headers.Add("Content-Length", res.Length.ToString());
-            return new FileStreamResult(new MemoryStream(res), "application/octet-stream");
+            if(latestVersion.Equals(version.latestVersion))
+            {
+                return StatusCode(304);
+            }
+
+            var firmwareBlob = container.GetBlobReference(version.path);
+            var memoryStream = new MemoryStream();
+            await firmwareBlob.DownloadToStreamAsync(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+        
+            HttpContext.Response.Headers.Add("Content-Length", memoryStream.Length.ToString());
+            return new FileStreamResult(memoryStream, "application/octet-stream");
+        }
+
+        public T CreateFromJsonStream<T>(Stream stream)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            T data;
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                data = (T)serializer.Deserialize(streamReader, typeof(T));
+            }
+            return data;
         }
     }
 }
