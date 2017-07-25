@@ -18,9 +18,6 @@ namespace Server.Controllers
     };
     public class UpdateController : Controller
     {
-
-        private const string latestVersion = "001";
-
         private const string versionHeaderKey = "x-ESP8266-version";
 
         public async Task<IActionResult> Index()
@@ -50,7 +47,7 @@ namespace Server.Controllers
                 version = CreateFromJsonStream<VersionSchema>(jsonStream);
             }
 
-            if(latestVersion.Equals(version.latestVersion))
+            if(clientVersion.Equals(version.latestVersion))
             {
                 return StatusCode(304);
             }
