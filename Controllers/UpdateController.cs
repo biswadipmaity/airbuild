@@ -47,7 +47,7 @@ namespace Server.Controllers
                 version = CreateFromJsonStream<VersionSchema>(jsonStream);
             }
 
-            if(clientVersion.Equals(version.latestVersion))
+            if(clientVersion.ToString().Equals(version.latestVersion))
             {
                 return StatusCode(304);
             }
