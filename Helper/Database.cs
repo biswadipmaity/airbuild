@@ -62,5 +62,46 @@ namespace Server.Helper
 
             return;
         }
+
+        public static Device.DeviceStatus getStatus(string mac)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    return device.currentStatus;
+                }
+            }
+
+            return Device.DeviceStatus.Idle;
+        }
+
+        public static void setStatus(string mac,Device.DeviceStatus status)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    device.currentStatus = status;
+                    return;
+                }
+            }
+
+            return;
+        }
+
+        public static void updateVersion(string mac, string version)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    device.currentBuild = version;
+                    return;
+                }
+            }
+
+            return;
+        }
     }
 }

@@ -20,6 +20,7 @@
             <th>Nickname</th>
             <th>Current Build</th>
             <th>Environment</th>
+            <th>Status</th>
             <th>Switch</th>
         </tr>
     </thead>
@@ -39,17 +40,20 @@
             <td>
                 @device.currentBuild
             </td>
-                @if(isPP)
-                {
-                    <td style="background:yellow">
-                       <p>Pre-Production</p>
-                    </td>
-                }
-                else{
-                    <td style="background:greenyellow">
-                        <p>Production</p>
-                    </td>
-                }
+            @if(isPP)
+            {
+                <td style="background:yellow">
+                    <p>Pre-Production</p>
+                </td>
+            }
+            else{
+                <td style="background:greenyellow">
+                    <p>Production</p>
+                </td>
+            }
+            <td>
+                @device.currentStatus.ToString()
+            </td>
             <td>
                 <a href="/Home/Switch/@device.MacID">
                     <p>Switch to @(isPP? "Production" : "Pre-Production")</p>

@@ -38,8 +38,7 @@
         public IActionResult Switch(string id)
         {
             Database.switchEnvironmnet(id);
-            var indexViewModel = new IndexViewModel();
-            return View("Index", indexViewModel);
+            return RedirectToAction("Index");
         }
     }
 }

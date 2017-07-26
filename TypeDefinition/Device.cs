@@ -4,6 +4,12 @@ namespace Server.TypeDefinition
 
     public class Device
     {
+        public enum DeviceStatus{
+            Idle,
+            UpdateStarted,
+            UpdateFinished
+        };
+        
         public Device(string MacID,
             string Nickname,
             bool isPreProductionDevice,
@@ -13,6 +19,7 @@ namespace Server.TypeDefinition
             this.Nickname = Nickname;
             this.isPreProductionDevice = isPreProductionDevice;
             this.currentBuild = currentBuild;
+            this.currentStatus = DeviceStatus.Idle;
         }
 
         public string MacID;
@@ -22,5 +29,7 @@ namespace Server.TypeDefinition
         public bool isPreProductionDevice;
 
         public string currentBuild;
+
+        public DeviceStatus currentStatus;
     }
 }

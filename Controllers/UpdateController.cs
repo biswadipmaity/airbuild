@@ -42,7 +42,7 @@ namespace Server.Controllers
                 Database.Devices.Add(device);
             }
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ProdBlob);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Database.isPPDevice(macID) ? ProdBlob : StagingBlob);
 
             //  create a blob client.
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -63,9 +63,20 @@ namespace Server.Controllers
 
             if(clientVersion.ToString().Equals(version.latestVersion))
             {
+                if(Database.getStatus(macID) == Device.DeviceStatus.UpdateStarted)    
+                {
+                    Database.setStatus(macID,  Device.DeviceStatus.UpdateFinished);   
+                    Database.updateVersion(macID,clientVersion);
+                }
+                else if(Database.getStatus(macID) == Device.DeviceStatus.UpdateStarted)    
+                {
+                    Database.setStatus(macID,  Device.DeviceStatus.Idle);
+                }
+                
                 return StatusCode(304);
             }
 
+            Database.setStatus(macID,  Device.DeviceStatus.UpdateStarted);
             var firmwareBlob = container.GetBlobReference(version.path);
             var memoryStream = new MemoryStream();
             await firmwareBlob.DownloadToStreamAsync(memoryStream);
