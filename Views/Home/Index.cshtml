@@ -35,6 +35,9 @@
 
             <td>
                 @device.Nickname
+                <a href="/Home/Name/@device.MacID?name=test">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
             </td>
 
             <td>
@@ -64,3 +67,12 @@
     </tbody>
     </table>
 </div>
+
+@section Scripts
+{
+   <script>
+       setTimeout(function(){
+         window.location.reload(1);
+        }, 1000);
+   </script>
+}

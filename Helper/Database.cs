@@ -7,21 +7,31 @@ namespace Server.Helper
     public static class Database{ 
         public static IList<Device> Devices = new List<Device>();
 
-        public static Dictionary<string, string> Nicknames = new Dictionary<string, string>
-        {
-            { "aa:bb:cc:dd:ee", "Device-Biswadip" },
-            { "bb:cc:dd:ee:aa", "Device-Nagaraju" },
-            { "cc:dd:ee:aa:bb", "Device-Vishal" }
-        };
-
         public static string getNickName(string mac)
         {
-            if (Nicknames.ContainsKey(mac)) 
+            foreach(var device in Devices)
             {
-                return Nicknames[mac];
+                if(device.MacID.Equals(mac))
+                {
+                    return device.Nickname;
+                }
             }
 
-            return string.Empty;
+            return "-";
+        }
+
+        public static void setNickName(string mac, string nick)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    device.Nickname = nick;
+                    break;
+                }
+            }
+
+            return;
         }
 
         public static bool isPPDevice(string mac)

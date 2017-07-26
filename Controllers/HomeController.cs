@@ -40,5 +40,13 @@
             Database.switchEnvironmnet(id);
             return RedirectToAction("Index");
         }
+
+        public IActionResult Name(string id)
+        {
+            var name = Request.Query["name"];
+            Database.setNickName(id, name);
+
+            return Content("Name changed");
+        }
     }
 }

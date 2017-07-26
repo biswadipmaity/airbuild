@@ -38,7 +38,7 @@ namespace Server.Controllers
 
             if(!Database.hasMacId(macID))
             {
-                var device = new Device(macID,Database.getNickName(macID), Database.isPPDevice(macID), clientVersion);
+                var device = new Device(macID, "-", false, clientVersion);
                 Database.Devices.Add(device);
             }
 
