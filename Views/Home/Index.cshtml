@@ -35,7 +35,7 @@
 
             <td>
                 @device.Nickname
-                <a href="/Home/Name/@device.MacID?name=test">
+                <a style="cursor:pointer;" onclick="updateName('@device.MacID')">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
             </td>
@@ -71,8 +71,18 @@
 @section Scripts
 {
    <script>
+       function updateName(macId) {
+            name = prompt("Please enter new name for Device", "IoT Device");
+            if (name != null) {
+                updatedlocation = "/Home/Name/"+macId+"?name="+name;
+                window.location = updatedlocation;
+            }
+        }
+
+/*
        setTimeout(function(){
          window.location.reload(1);
         }, 5000);
+*/
    </script>
 }

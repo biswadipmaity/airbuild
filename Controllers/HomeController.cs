@@ -46,7 +46,7 @@
             var name = Request.Query["name"];
             Database.setNickName(id, name);
 
-            return Content("Name changed");
+            return RedirectToAction("Index");
         }
     }
 }
