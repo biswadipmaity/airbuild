@@ -68,7 +68,7 @@ namespace Server.Controllers
                     Database.setStatus(macID,  Device.DeviceStatus.UpdateFinished);   
                     Database.updateVersion(macID,clientVersion);
                 }
-                else if(Database.getStatus(macID) == Device.DeviceStatus.UpdateStarted)    
+                else if(Database.getStatus(macID) == Device.DeviceStatus.UpdateFinished)    
                 {
                     Database.setStatus(macID,  Device.DeviceStatus.Idle);
                 }
