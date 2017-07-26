@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using Server.Helper;
+using Server.TypeDefinition;
 
 namespace Server.Controllers
 {
@@ -19,10 +21,12 @@ namespace Server.Controllers
     public class UpdateController : Controller
     {
         private const string versionHeaderKey = "x-ESP8266-version";
-
+        private const string macHeaderKey = "x-ESP8266-STA-MAC";
+        
         public async Task<IActionResult> Index()
         {
             var clientVersion = Request.Headers[versionHeaderKey];
+            var macID = Request.Headers[macHeaderKey];
             if(string.IsNullOrWhiteSpace(clientVersion))
             {
                 return StatusCode(404);
@@ -51,6 +55,9 @@ namespace Server.Controllers
             {
                 return StatusCode(304);
             }
+
+            var device = new Device(macID,Database.getNickName(macID), Database.isPPDevice(macID), version.latestVersion);
+            Database.Devices.Add(device);
 
             var firmwareBlob = container.GetBlobReference(version.path);
             var memoryStream = new MemoryStream();

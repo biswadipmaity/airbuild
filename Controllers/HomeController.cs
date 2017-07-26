@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Server.Controllers
+﻿namespace Server.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Server.ViewModel;
+
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            return View();
+            var indexViewModel = new IndexViewModel();
+            return View(indexViewModel);
         }
 
         public IActionResult About()
