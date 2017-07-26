@@ -14,13 +14,6 @@ namespace Server.Helper
             { "cc:dd:ee:aa:bb", "Device-Vishal" }
         };
 
-        public static Dictionary<string, bool> PPDevice = new Dictionary<string, bool>
-        {
-            { "aa:bb:cc:dd:ee", true },
-            { "bb:cc:dd:ee:aa", false },
-            { "cc:dd:ee:aa:bb", false }
-        };
-
         public static string getNickName(string mac)
         {
             if (Nicknames.ContainsKey(mac)) 
@@ -33,12 +26,41 @@ namespace Server.Helper
 
         public static bool isPPDevice(string mac)
         {
-            if (PPDevice.ContainsKey(mac)) 
+            foreach(var device in Devices)
             {
-                return PPDevice[mac];
+                if(device.MacID.Equals(mac))
+                {
+                    return device.isPreProductionDevice;
+                }
+            }
+            return false;
+        }
+
+        public static bool hasMacId(string mac)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    return true;
+                }
             }
 
             return false;
+        }
+
+        public static void switchEnvironmnet(string mac)
+        {
+            foreach(var device in Devices)
+            {
+                if(device.MacID.Equals(mac))
+                {
+                    device.isPreProductionDevice = !device.isPreProductionDevice;
+                    return;
+                }
+            }
+
+            return;
         }
     }
 }

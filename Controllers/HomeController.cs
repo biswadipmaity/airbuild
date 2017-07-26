@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Server.ViewModel;
+    using Server.Helper;
 
     public class HomeController : Controller
     {
@@ -32,6 +33,13 @@
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult Switch(string id)
+        {
+            Database.switchEnvironmnet(id);
+            var indexViewModel = new IndexViewModel();
+            return View("Index", indexViewModel);
         }
     }
 }

@@ -22,7 +22,11 @@ namespace Server.Controllers
     {
         private const string versionHeaderKey = "x-ESP8266-version";
         private const string macHeaderKey = "x-ESP8266-STA-MAC";
+
+        private const string StagingBlob = "DefaultEndpointsProtocol=https;AccountName=airbuildppe;AccountKey=HXl2xZ1C05Q2gOSiL66JJKwj7VPWQ5DkeGRbk5a1HAPPredw5zsLzNr3hc/Gl7HSqB3PjYbdWDWmu1FOcRYFVQ==;EndpointSuffix=core.windows.net";
         
+        private const string ProdBlob = "DefaultEndpointsProtocol=https;AccountName=airbuildprod;AccountKey=+Fb9XlmUDwjDYNQeG1zHqZrqreEdZ5bqbYY0PATDvqGYx4OQo9ec5+AXlhuNolR7tAqhu0j5Zv5ybhNT8MYONQ==;EndpointSuffix=core.windows.net";
+
         public async Task<IActionResult> Index()
         {
             var clientVersion = Request.Headers[versionHeaderKey];
@@ -32,7 +36,13 @@ namespace Server.Controllers
                 return StatusCode(404);
             }
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airbuildppe;AccountKey=HXl2xZ1C05Q2gOSiL66JJKwj7VPWQ5DkeGRbk5a1HAPPredw5zsLzNr3hc/Gl7HSqB3PjYbdWDWmu1FOcRYFVQ==;EndpointSuffix=core.windows.net");
+            if(!Database.hasMacId(macID))
+            {
+                var device = new Device(macID,Database.getNickName(macID), Database.isPPDevice(macID), clientVersion);
+                Database.Devices.Add(device);
+            }
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ProdBlob);
 
             //  create a blob client.
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -55,9 +65,6 @@ namespace Server.Controllers
             {
                 return StatusCode(304);
             }
-
-            var device = new Device(macID,Database.getNickName(macID), Database.isPPDevice(macID), version.latestVersion);
-            Database.Devices.Add(device);
 
             var firmwareBlob = container.GetBlobReference(version.path);
             var memoryStream = new MemoryStream();

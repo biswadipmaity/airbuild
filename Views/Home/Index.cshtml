@@ -19,12 +19,14 @@
             <th>MAC ID</th>
             <th>Nickname</th>
             <th>Current Build</th>
-            <th>Staging Device</th>
+            <th>Environment</th>
+            <th>Switch</th>
         </tr>
     </thead>
     <tbody>
     @foreach (var device in Model.Devices)
     {
+        bool isPP = device.isPreProductionDevice;
         <tr>
             <td>
                 @device.MacID
@@ -37,12 +39,21 @@
             <td>
                 @device.currentBuild
             </td>
-
-            <td>
-                @if(device.isPreProductionDevice)
+                @if(isPP)
                 {
-                    <span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>
+                    <td style="background:yellow">
+                       <p>Pre-Production</p>
+                    </td>
                 }
+                else{
+                    <td style="background:greenyellow">
+                        <p>Production</p>
+                    </td>
+                }
+            <td>
+                <a href="/Home/Switch/@device.MacID">
+                    <p>Switch to @(isPP? "Production" : "Pre-Production")</p>
+                </a>
             </td>
         </tr>
     }
