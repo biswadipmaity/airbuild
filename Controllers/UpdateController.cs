@@ -42,7 +42,7 @@ namespace Server.Controllers
                 Database.Devices.Add(device);
             }
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Database.isPPDevice(macID) ? ProdBlob : StagingBlob);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Database.isPPDevice(macID) ? StagingBlob : ProdBlob);
 
             //  create a blob client.
             var blobClient = storageAccount.CreateCloudBlobClient();
